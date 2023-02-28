@@ -9,7 +9,8 @@ export interface ResponseData extends userData {
     status: number,
     message: string,
     error?: string | null,
-    user?: userData
+    user?: userData,
+    token?: string
 }
 // Interface of the user Model
 export interface IUser extends Document {

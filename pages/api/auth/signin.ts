@@ -4,6 +4,7 @@ import connectDB from "../../../Database/db";
 import { ResponseData } from "../../../interfaces/IRserver";
 import userExistence from "../../../lib/Existence";
 import { verifyPassword } from "../../../lib/Verification";
+import GetToken from "../../../utils/TokenSign";
 
 export default async function hanlder(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
@@ -41,6 +42,8 @@ export default async function hanlder(req: NextApiRequest, res: NextApiResponse)
                         };
                         return res.status(401).json(data);
                     }
+                    // Get token
+                    const token = await GetToken(email);
                     // success Response
                     const data: ResponseData = {
                         user: {
@@ -50,7 +53,8 @@ export default async function hanlder(req: NextApiRequest, res: NextApiResponse)
                         message: "Verification Successfully Done",
                         status: 200,
                         success: true,
-                        error: null
+                        error: null,
+                        token
                     }
                     db.close();
                     return res.status(200).json(data);
