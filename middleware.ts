@@ -2,36 +2,33 @@ import { NextRequest, NextResponse } from 'next/server';
 import isAuthenticated from './lib/auth';
 
 
+
 export async function middleware(request: NextRequest) {
-  // Verification of the Token
-  const token = request.cookies.get('auth')?.valueOf();
-  console.log('running');
-
-  if (!token) {
-    return NextResponse.rewrite(new URL('/login', request.url))
+  const value = request.cookies.get('auth')?.valueOf();
+  // If the value is not present 
+  if (!value) {
+    const loginURl = new URL('/auth/login', request.url);
+    return NextResponse.rewrite(loginURl);
   }
-
-  const verifiedToken = token && (await isAuthenticated(token).catch((err) => {
-    console.error(err);
+  // if the token is not verifyied  
+  const verifiedToken = value && (await isAuthenticated(value).catch((err) => {
+    console.log(err);
+    return false;
   }))
-
+  // if they are not verifyied 
   if (!verifiedToken) {
-    return NextResponse.rewrite(new URL('/login', request.url));
-  }
-  if (request.url.includes('/login') && verifiedToken) {
-    console.log('running login');
     console.log(verifiedToken);
-
-    NextResponse.redirect(new URL('/admin', request.url))
-    return;
+    const loginURl = new URL('/auth/login', request.url);
+    return NextResponse.rewrite(loginURl);
   }
-  if (request.nextUrl.pathname.startsWith('/login')) {
-
-    return NextResponse.rewrite(new URL('/register', request.url))
+  // if verifyied but trying to acess the login or register page
+  if (verifiedToken && (request.nextUrl.pathname.startsWith('/auth/login') || request.nextUrl.pathname.startsWith('/auth/register'))) {
+    const unknownPage = new URL('/404', request.url);
+    return NextResponse.redirect(unknownPage);
   }
-
 }
 
-// export const config = {
-//   matcher: ['/login', '/admin'],
-// }
+
+export const config = {
+  matcher: ["/auth/:path*", "/admin/:path*"]
+}
