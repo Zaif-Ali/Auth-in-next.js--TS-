@@ -4,7 +4,7 @@ import { ResponseData } from "../../../interfaces/IRserver";
 import userExistence from "../../../lib/Existence";
 import user from "../../../models/user";
 import GetToken from "../../../utils/TokenSign";
-import jwt from 'jsonwebtoken';
+import cookie from "cookie";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     };
                     return res.status(400).json(data);
                 }
-                
+
                 // Get token
                 const token = await GetToken(email);
 
@@ -43,6 +43,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
 
                 await newUser.save();
+
+                // Saving the token in the response Header
+                res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
+                    httpOnly: true,
+                    sameSite: "strict",
+                    secure: true,
+                    maxAge : 3600,
+                    path : '/'
+                }))
 
                 // success response
                 const data: ResponseData = {

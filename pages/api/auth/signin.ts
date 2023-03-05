@@ -5,6 +5,7 @@ import { ResponseData } from "../../../interfaces/IRserver";
 import userExistence from "../../../lib/Existence";
 import { verifyPassword } from "../../../lib/Verification";
 import GetToken from "../../../utils/TokenSign";
+import cookie from "cookie";
 
 export default async function hanlder(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
@@ -44,6 +45,16 @@ export default async function hanlder(req: NextApiRequest, res: NextApiResponse)
                     }
                     // Get token
                     const token = await GetToken(email);
+
+                    // Saving the token in the response Header
+                    res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
+                        httpOnly: true,
+                        sameSite: "strict",
+                        secure: true,
+                        maxAge: 3600,
+                        path: '/'
+                    }))
+
                     // success Response
                     const data: ResponseData = {
                         user: {

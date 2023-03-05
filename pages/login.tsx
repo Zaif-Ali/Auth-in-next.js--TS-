@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 interface Props {}
 
 const Login: NextPage<Props> = ({}) => {
@@ -8,6 +9,7 @@ const Login: NextPage<Props> = ({}) => {
     email: "",
     password: "",
   });
+  const router = useRouter();
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setdata((prevstate) => ({
       ...prevstate,
@@ -19,6 +21,7 @@ const Login: NextPage<Props> = ({}) => {
       const res = await axios.post("/api/auth/signin",  userData );
       const data = res.data;
       console.log(data);
+      router.push('/');
     } catch (error) {
       console.log(error);
     }

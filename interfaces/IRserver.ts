@@ -19,3 +19,8 @@ export interface IUser extends Document {
     password: string;
     role: string;
 }
+// Interface of the JWT Payload 
+export interface IFverifyPayload {
+    iat: number,
+    exp: number
+}
