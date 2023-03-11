@@ -3,13 +3,13 @@ import { sign, SignOptions } from 'jsonwebtoken';
 import { config } from "dotenv";
 config();
 const { JWT_SECRET } = process.env;
-export default async function GetToken(useremail: string) {
+export default async function GetToken(useremail: string , role : string) {
 
-    if (!useremail) {
-        throw new Error('Email is required to generate token');
+    if (!useremail || !role) {
+        throw new Error('Server Error');
     }
     
-    const payload = { useremail };
+    const payload = { useremail , role };
 
     if (JWT_SECRET == undefined) {
         throw new Error('Server Error');

@@ -10,7 +10,6 @@ export interface ResponseData extends userData {
     message: string,
     error?: string | null,
     user?: userData,
-    token?: string
 }
 // Interface of the user Model
 export interface IUser extends Document {
@@ -21,6 +20,8 @@ export interface IUser extends Document {
 }
 // Interface of the JWT Payload 
 export interface IFverifyPayload {
+    useremail: string,
+    role: string,
     iat: number,
     exp: number
 }

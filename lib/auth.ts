@@ -15,7 +15,8 @@ export default async function isAuthenticated(token: string) {
     try {
 
         const verified = await jwtVerify(token, new TextEncoder().encode(getJWTString()))
-        return verified.payload as IFverifyPayload;
+                
+        return verified.payload.role;
     } catch (error) {
         throw new Error("Failed")
     }

@@ -44,7 +44,7 @@ export default async function hanlder(req: NextApiRequest, res: NextApiResponse)
                         return res.status(401).json(data);
                     }
                     // Get token
-                    const token = await GetToken(email);
+                    const token = await GetToken(email , userData.role);
 
                     // Saving the token in the response Header
                     res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
@@ -65,7 +65,7 @@ export default async function hanlder(req: NextApiRequest, res: NextApiResponse)
                         status: 200,
                         success: true,
                         error: null,
-                        token
+    
                     }
                     db.close();
                     return res.status(200).json(data);

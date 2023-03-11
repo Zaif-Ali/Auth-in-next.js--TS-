@@ -16,9 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const { name, email, password } = req.body;
 
                 // Check User Existance
-                const { found } = await userExistence(email);
+                const { found, userData } = await userExistence(email);
 
-                if (found) {
+                if (found && userData) {
                     const data: ResponseData = {
                         user: {
                             email: email,
@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
 
                 // Get token
-                const token = await GetToken(email);
+                const token = await GetToken(email, 'user');
 
                 // Creating new user
                 const newUser = new user({
@@ -49,8 +49,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     httpOnly: true,
                     sameSite: "strict",
                     secure: true,
-                    maxAge : 3600,
-                    path : '/'
+                    maxAge: 3600,
+                    path: '/'
                 }))
 
                 // success response
@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     status: 200,
                     success: true,
                     error: null,
-                    token: token,
+
                 };
 
                 db.close();
