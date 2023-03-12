@@ -8,8 +8,11 @@ export async function middleware(request: NextRequest) {
   const loginURl = new URL('/auth/login', request.url);
   const unknownPage = new URL('/404', request.url);
   const value = request.cookies.get('auth')?.valueOf();
-  // If the value is not present 
   if (!value) {
+    if (request.nextUrl.pathname.startsWith('/auth/login') || request.nextUrl.pathname.startsWith('/auth/register')) {
+      return;
+    }
+    // If the value is not present and trying to acess the protected routes
     return NextResponse.rewrite(loginURl);
 
   }
