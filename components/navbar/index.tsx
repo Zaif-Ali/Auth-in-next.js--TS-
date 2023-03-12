@@ -7,12 +7,13 @@ import { BsSun } from "react-icons/bs";
 
 import Link from "next/link";
 import { LoginBaseditems, navitems } from "../../Data/Navitems";
+import { useisLogged } from "../../store/islogged";
 
 interface Props {}
 const Navbar: NextPage<Props> = () => {
   const { systemTheme, theme, setTheme } = useTheme();
   const [ThemeName, setThemeName] = useState<String>();
-
+  const { flag, loggedfalse } = useisLogged();
   useEffect(() => {
     const currentTheme = theme === "system" ? systemTheme : theme;
     setThemeName(currentTheme);
@@ -89,21 +90,33 @@ const Navbar: NextPage<Props> = () => {
                   </li>
                 );
               })}
-              {LoginBaseditems.map((item) => {
-                return (
-                  <li key={item.name}>
-                    <Link href={item.href}>
-                      <a
-                        className="block py-2 pl-3 pr-4 text-white bg-purple-600 opacity-80 rounded md:bg-transparent md:text-purple-700 md:p-0 dark:text-gray-50"
-                        aria-current="page"
-                      >
-                        {item.name}
-                      </a>
-                    </Link>
-                  </li>
-                );
-              })}
-              
+              {!flag ? (
+                LoginBaseditems.map((item) => {
+                  return (
+                    <li key={item.name}>
+                      <Link href={item.href}>
+                        <a
+                          className="block py-2 pl-3 pr-4 text-white bg-purple-600 opacity-80 rounded md:bg-transparent md:text-purple-700 md:p-0 dark:text-gray-50"
+                          aria-current="page"
+                        >
+                          {item.name}
+                        </a>
+                      </Link>
+                    </li>
+                  );
+                })
+              ) : (
+                <button
+                  onClick={() => {
+                    loggedfalse();
+                  }}
+                  className="block py-2 pl-3 pr-4 text-white bg-purple-600 opacity-80 rounded md:bg-transparent md:text-purple-700 md:p-0 dark:text-gray-50"
+                  aria-current="page"
+                >
+                  Log out
+                </button>
+              )}
+
               <li className="hidden md:block">{renderThemeChanger()}</li>
             </ul>
           </div>
