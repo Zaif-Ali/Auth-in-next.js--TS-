@@ -7,13 +7,23 @@ import { BsSun } from "react-icons/bs";
 
 import Link from "next/link";
 import { LoginBaseditems, navitems } from "../../Data/Navitems";
-import { useisLogged } from "../../store/islogged";
+import {logout} from "../../Redux/Reducers/isLogged"
+import { useSelector, useDispatch } from "react-redux";
 
 interface Props {}
 const Navbar: NextPage<Props> = () => {
+  // const { flag, loggedfalse } = useisLogged();
+  const flag = useSelector(
+    (state: any) => state.persistedReducer.auth.isLoggedIn
+  );
+  // console.log(flag);
+  const dispatch = useDispatch();
+  const HandleLogout = () => {
+    dispatch(logout());
+  }
+
   const { systemTheme, theme, setTheme } = useTheme();
   const [ThemeName, setThemeName] = useState<String>();
-  const { flag, loggedfalse } = useisLogged();
   useEffect(() => {
     const currentTheme = theme === "system" ? systemTheme : theme;
     setThemeName(currentTheme);
@@ -48,6 +58,8 @@ const Navbar: NextPage<Props> = () => {
       element.classList.toggle("hidden");
     }
   };
+
+
   return (
     <div className="top-0 sticky bottom-0 ">
       <nav className="bg-gray-50 border dark:border-0 border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900 ">
@@ -108,7 +120,7 @@ const Navbar: NextPage<Props> = () => {
               ) : (
                 <button
                   onClick={() => {
-                    loggedfalse();
+                    HandleLogout();
                   }}
                   className="block py-2 pl-3 pr-4 text-white bg-purple-600 opacity-80 rounded md:bg-transparent md:text-purple-700 md:p-0 dark:text-gray-50"
                   aria-current="page"

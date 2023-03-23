@@ -6,12 +6,14 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import validateEmail from "../../lib/ValidateEmail";
 import { LoginFormData } from "../../interfaces/IRClient";
-import { useisLogged } from "../../store/islogged";
+import {login} from "../../Redux/Reducers/isLogged"
+import {  useDispatch } from "react-redux";
+
 
 interface Props {}
 
 const Login: NextPage<Props> = ({}) => {
-  const { loggedtrue } = useisLogged();
+  const dispatch = useDispatch();
   // use Form hook
   const {
     register,
@@ -21,7 +23,7 @@ const Login: NextPage<Props> = ({}) => {
   // Handle submit
   const HandleSubmitLogin = (data: LoginFormData) => {
     console.log(data);
-    loggedtrue();
+    dispatch(login(data));
     router.push("/");
   };
 
